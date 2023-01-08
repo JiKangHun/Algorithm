@@ -36,7 +36,7 @@ class Solution {
             
             for(int i=numStart; i<fileName.length(); i++){
                 char idx = fileName.charAt(i);
-                if(idx < '0' || idx > '9'){
+                if(number.length()<=5 && idx < '0' || idx > '9'){
                   tail.append(fileName.substring(i, fileName.length()));
                   break;
                 }
