@@ -3,30 +3,25 @@ import java.util.*;
 class Solution {
     
     public String solution(String[] participant, String[] completion) {
+     
+        HashMap<String, Integer> all = new HashMap();
+        for(String name : participant){
+            all.put(name, all.getOrDefault(name, 0) + 1);
+        }
         
-        HashMap<String, Integer> map = new HashMap<>();
-        for(int i=0; i<participant.length; i++){
-            if(map.get(participant[i])!=null){
-                Integer num = map.get(participant[i]);
-                map.put(participant[i], ++num);
+        for(String name : completion){
+            if(all.get(name) > 1){
+              all.put(name, all.get(name)-1);  
             }else{
-                map.put(participant[i], 1);
-            }
+              all.remove(name);  
+            }            
         }
         
-        for(int i=0; i<completion.length; i++){
-            Integer num = map.get(completion[i]);
-            map.put(completion[i], --num);
+        String answer = "";
+        for(String name: all.keySet()){
+            answer = name;
         }
         
-        Iterator<String> keys = map.keySet().iterator();
-        while(keys.hasNext()){
-            String key = keys.next();
-            if(map.get(key)>0){
-                return key;
-            } 
-        }
-        
-        return null;
+        return answer;
     }
 }
