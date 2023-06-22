@@ -19,48 +19,24 @@ public class Main {
 			sequence[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		int idx = 0;
-		int sum = 0;
-		boolean isPossible = true;
+		int start = 0;
+		int end = 0;
+		int sum = sequence[0];
+		int answer = Integer.MAX_VALUE;
 		
-		while(true) {
+		while( true ) {
 			
-			if(idx == N) {
-				isPossible = false;
-				break;
+			if(sum >= S) {
+				answer = Math.min(answer, end-start+1);
+				sum -= sequence[start++];
+			}else {
+				if(end == N-1) break;
+				sum += sequence[++end];
 			}
-			sum += sequence[idx];
-			if(sum >= S) break;
-			++idx;
 		}
 		
-		if(!isPossible) {
-			System.out.println(0);
-		}else {
-			
-			int start = 0;
-			int end = idx;
-			int answer = idx+1;
-			int length = idx+1;
-			
-			while( end != N ) {
-
-				if(sum >= S) {
-					answer = Math.min(answer, length);
-					sum -= sequence[start];
-					++start;
-					--length;
-				}else {
-					++end;
-					if(end == N) break;
-					sum += sequence[end];
-					++length;
-				}
-			}
-			
-			System.out.println(answer);
-		}
-		
+		answer = answer == Integer.MAX_VALUE ? 0 : answer;
+		System.out.println(answer);
 		
 	}
 }
