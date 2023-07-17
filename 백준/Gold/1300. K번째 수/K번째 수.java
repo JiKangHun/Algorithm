@@ -8,6 +8,7 @@ public class Main {
 		int N = Integer.parseInt(br.readLine());
 		int k = Integer.parseInt(br.readLine());
 		
+		
 		long left = 1;
 		long right = (long)N*N+1;
 		long answer = 1;
@@ -17,7 +18,7 @@ public class Main {
 			long mid = (left+right) / 2;
 			long smaller = 0;
 			
-			for(long i=1; i<=N; i++) {
+			for(int i=1; i<=N; i++) {
 				// 나누어 떨어진다. 같은 게 있다.
 				if(mid % i == 0) {
 					// 내가 배열에 포함된다.
