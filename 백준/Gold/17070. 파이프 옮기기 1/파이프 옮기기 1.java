@@ -2,95 +2,56 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Main  {
+public class Main {
 	
-	static int N;
-	static int answer;
-	static int[][] map;
-	static int[][] row = {{0,1,0,1},
-						{0,1,1,1}};
 	
-	static int[][] col = {{1,0,1,0},
-						{1,0,1,1}};
-	
-	static int[][] diagonal = {{1,1,0,1},
-								{1,1,1,0},
-								{1,1,1,1}};
-	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception{
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		N = Integer.parseInt(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 	
-		map = new int[N][N];
-		for(int i=0; i<N; i++) {
+		int[][] map = new int[N+1][N+1];
+		for(int i=1; i<=N; i++) {
 			st = new StringTokenizer(br.readLine()," ");
-			for(int j=0; j<N; j++) {
+			for(int j=1; j<=N; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		int[] pipe = {0, 0, 0, 1};
-		movePipe(pipe);
+		
+		long[][][] d = new long[N+1][N+1][3];
+		if(map[1][3] != 1) {
+			d[1][3][0] = 1;
+			if(map[2][2] != 1 && map[2][3] != 1) {
+				d[2][3][2] = 1;
+			}
+		}
+		
+		//그 방향으로 온 거는 그 방향 칸에 플러스 해주어야 함
+		//마지막 정답은 전 방향으로 온 거 총합
+		for(int i=1; i<=N; i++) {
+			for(int j=1; j<=N; j++) {
+				
+				// 빈칸인 경우
+				if(map[i][j] != 1) {
+					//왼쪽 칸은 가로나 대각으로 온 것만 더한다
+					d[i][j][0] += d[i][j-1][0] + d[i][j-1][2];
+					//위쪽 칸은 세로나 대각으로 온 것만 더한다
+					d[i][j][1] += d[i-1][j][1] + d[i-1][j][2];
+					//대각 방향은 다 더한다.(왼쪽과 위가 벽이 아닌 경우)
+					if(map[i][j-1] != 1 && map[i-1][j] != 1) {
+						d[i][j][2] += d[i-1][j-1][0] + d[i-1][j-1][1] + d[i-1][j-1][2];
+					}
+				}
+			}
+		}
+		
+		long answer = 0;
+		for(int i=0; i<3; i++) {
+			answer += d[N][N][i];
+		}
+		
 		System.out.println(answer);
 		
-	}
-	
-	private static void movePipe(int[] pipe) {
-		
-		if(outMap(pipe)) return;
-		if(checkWall(pipe)) return;
-		if(pipe[0]!=pipe[2] && pipe[1]!=pipe[3] && checkDigonal(pipe)) return; 
-		if(arrive(pipe)) {
-			++answer;
-			return;
-		}
-		
-		//가로방향일 때
-		if(pipe[0] == pipe[2]) {
-			for(int i=0; i<2; i++) {
-				int[] newPipe = new int[4];
-				for(int d=0; d<4; d++) {
-					newPipe[d] = pipe[d] + row[i][d];
-				}
-				movePipe(newPipe);
-			}
-		
-		//세로방향일 때
-		}else if(pipe[1] == pipe[3]) {
-			for(int i=0; i<2; i++) {
-				int[] newPipe = new int[4];
-				for(int d=0; d<4; d++) {
-					newPipe[d] = pipe[d] + col[i][d];
-				}
-				movePipe(newPipe);
-			}
-		
-		//대각선일 때
-		}else {
-			for(int i=0; i<3; i++) {
-				int[] newPipe = new int[4];
-				for(int d=0; d<4; d++) {
-					newPipe[d] = pipe[d] + diagonal[i][d];
-					
-				}
-				movePipe(newPipe);
-			}
-		}
-	}
-	
-	private static boolean checkDigonal(int[] newPipe) {
-		return map[newPipe[2]-1][newPipe[3]] == 1 || map[newPipe[2]][newPipe[3]-1] == 1;
-	}
-
-	private static boolean arrive(int[] pipe) {
-		return pipe[2] == N-1 && pipe[3] == N-1;
-	}
-	private static boolean outMap(int[] pipe) {
-		
-		return pipe[0] >= N || pipe[2] >= N || pipe[1] >= N || pipe[3] >= N;
-	}
-	private static boolean checkWall(int[] pipe) {
-		return map[pipe[0]][pipe[1]] == 1 || map[pipe[2]][pipe[3]] == 1;
 	}
 }
