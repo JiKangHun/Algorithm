@@ -21,7 +21,7 @@ class Solution {
         if((q1Sum + q2Sum) % 2 != 0) return -1;
         long half = (q1Sum + q2Sum) / 2;
         int work = 0;
-        for(int i=0; i<n*3; i++){
+        for(int i=0; i<n*3-2; i++){
             if(q1Sum > half && !q1.isEmpty()){
                 int next = q1.poll();
                 q2.add(next);
