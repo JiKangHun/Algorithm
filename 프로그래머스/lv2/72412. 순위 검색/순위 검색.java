@@ -37,22 +37,12 @@ class Solution {
             outer:
             for(String key: map.keySet()){
                 
-                int cnt = 0;
                 int[] scoreBoard = map.get(key);
                 
-                for(int j=0; j<7; j++){
-                    if( str[j].equals("-") ) ++cnt;
-                }
-                
-                if(cnt==4){
-                    sum += scoreBoard[100000] - scoreBoard[limit];
-                    continue outer;
-                }
                 for(int j=0; j<7; j++){
                     if( str[j].equals("-") || str[j].equals("and") ) continue;
                     if(!key.contains(str[j])) continue outer;           
                 }
-                
                 
                 sum += scoreBoard[100000] - scoreBoard[limit];
             }
