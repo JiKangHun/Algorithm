@@ -32,6 +32,13 @@ public class Main {
 			int down = cur - 1;
 			int move = cur * 2;
 			
+			if(0<= down && visited[down]==0) {
+				visited[down] = 1;
+				q.add(down);
+			}
+		
+			if(N>K) continue;
+			
 			if(move<=100000 && visited[move]==0) {
 				visited[move] = 3;
 				q.add(move);
@@ -40,11 +47,6 @@ public class Main {
 			if(up<=100000 && visited[up]==0) {
 				visited[up] = 2;
 				q.add(up);
-			}
-			
-			if(0<= down && visited[down]==0) {
-				visited[down] = 1;
-				q.add(down);
 			}
 						
 		}
@@ -56,17 +58,11 @@ public class Main {
 		
 		while(cur != N) {
 			
-			if(visited[cur] == 3) {
-				cur /= 2;
-				stack.push(cur);
-				++time;
-			}
-			
 			if(visited[cur] == 2) {
 				cur -= 1;
 				stack.push(cur);
 				++time;
-			}
+			}			
 			
 			if(visited[cur] == 1) {
 				cur += 1;
@@ -74,11 +70,19 @@ public class Main {
 				++time;
 			}
 			
+			if(visited[cur] == 3) {
+				cur /= 2;
+				stack.push(cur);
+				++time;
+			}
+
 		}
 		
 		System.out.println(time);
+		StringBuilder sb = new StringBuilder();
 		while(!stack.isEmpty()) {
-			System.out.print(stack.pop()+" ");
+			sb.append(stack.pop()).append(" ");
 		}
+		System.out.println(sb);
 	}
 }
