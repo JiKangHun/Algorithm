@@ -1,29 +1,11 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
-	
-	public static class Location{
-		
-		int loc;
-		int target;
-		ArrayList<Integer> route;
-		
-		public Location(int loc, int target, ArrayList<Integer> route) {
-			
-			this.loc = loc;
-			this.target = target;
-			this.route = route;
-		}
-		
-
-	}
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -33,74 +15,70 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
 		
-		if(N > K) {
-			System.out.println(N-K);
-			for(int i=N; i>=K; i--) {
-				System.out.print(i+" ");
-			}
-			return;
-		}
-		
-		Queue<Location> q = new LinkedList<>();
-		ArrayList<Integer> route = new ArrayList<>();
-		route.add(N);
-		q.add(new Location(N,K,route));
-		
+		Queue<Integer> q = new LinkedList<>();
 		int[] visited = new int[100001];
-		Arrays.fill(visited, Integer.MAX_VALUE);
-		visited[N] = 0;
-		
-		int answer = Integer.MAX_VALUE;
-		ArrayList<Integer> answerRoute = new ArrayList<>();
+		visited[N] = -1;
+		q.add(N);
 		
 		while(!q.isEmpty()) {
 			
-			Location cur = q.poll();
-			if(cur.loc == K && cur.route.size() < answer) {			
-				answer = cur.route.size();
-				answerRoute = cur.route;
+			int cur = q.poll();
+			
+			if(cur == K) {
 				break;
 			}
 			
-			int down = cur.loc - 1;
-			int up = cur.loc + 1;
-			int move = cur.loc * 2;
+			int up = cur + 1;
+			int down = cur - 1;
+			int move = cur * 2;
 			
-			if(move <= 100000 && visited[move] > cur.route.size()+1) {
-				ArrayList<Integer> next = new ArrayList<>();
-				for(int num: cur.route) {
-					next.add(num);
-				}
-				next.add(move);
-				q.add(new Location(move,K, next));
-				visited[move] = next.size();
+			if(move<=100000 && visited[move]==0) {
+				visited[move] = 3;
+				q.add(move);
 			}
 			
-			if(down >= 0 && visited[down] > cur.route.size()+1) {
-				ArrayList<Integer> next = new ArrayList<>();
-				for(int num: cur.route) {
-					next.add(num);
-				}
-				next.add(down);
-				q.add(new Location(down,K, next));
-				visited[down] = next.size();
+			if(up<=100000 && visited[up]==0) {
+				visited[up] = 2;
+				q.add(up);
 			}
 			
-			if(up <= 100000 && visited[up] > cur.route.size()+1) {
-				ArrayList<Integer> next = new ArrayList<>();
-				for(int num: cur.route) {
-					next.add(num);
-				}
-				next.add(up);
-				q.add(new Location(up, K,next));
-				visited[up] = next.size();
+			if(0<= down && visited[down]==0) {
+				visited[down] = 1;
+				q.add(down);
+			}
+						
+		}
+		
+		Stack<Integer> stack = new Stack<>();
+		stack.push(K);
+		int cur = K;
+		int time = 0;		
+		
+		while(cur != N) {
+			
+			if(visited[cur] == 3) {
+				cur /= 2;
+				stack.push(cur);
+				++time;
+			}
+			
+			if(visited[cur] == 2) {
+				cur -= 1;
+				stack.push(cur);
+				++time;
+			}
+			
+			if(visited[cur] == 1) {
+				cur += 1;
+				stack.push(cur);
+				++time;
 			}
 			
 		}
 		
-		System.out.println(answer-1);
-		for(int num: answerRoute) {
-			System.out.print(num+" ");
+		System.out.println(time);
+		while(!stack.isEmpty()) {
+			System.out.print(stack.pop()+" ");
 		}
 	}
 }
